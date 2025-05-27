@@ -9,15 +9,15 @@ namespace Sundial.Scheduler.Quartz;
 /// </summary>
 public class JobFactory : IJobFactory
 {
-    private readonly IServiceProvider _serviceProvider;
+    private readonly IServiceProvider _provider;
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="serviceProvider"></param>
-    public JobFactory(IServiceProvider serviceProvider)
+    /// <param name="provider"></param>
+    public JobFactory(IServiceProvider provider)
     {
-        _serviceProvider = serviceProvider;
+        _provider = provider;
     }
 
     /// <summary>
@@ -28,7 +28,7 @@ public class JobFactory : IJobFactory
     /// <returns></returns>
     public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
     {
-        return (IJob)_serviceProvider.GetRequiredService(bundle.JobDetail.JobType);
+        return (IJob)_provider.GetRequiredService(bundle.JobDetail.JobType);
     }
 
     /// <summary>
@@ -37,5 +37,6 @@ public class JobFactory : IJobFactory
     /// <param name="job"></param>
     public void ReturnJob(IJob job)
     {
+        (job as IDisposable)?.Dispose();
     }
 }

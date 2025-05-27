@@ -7,7 +7,7 @@ using Sundial.Scheduler.Models;
 using Sundial.Scheduler.Quartz;
 using Topshelf;
 
-var configuration = new ConfigurationBuilder().SetBasePath(AppDomain.CurrentDomain.BaseDirectory).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build();
+var configuration = new ConfigurationBuilder().AddInMemoryCollection().SetBasePath(AppDomain.CurrentDomain.BaseDirectory).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build();
 Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(configuration).Enrich.FromLogContext().CreateLogger();
 
 ServiceCollection services = new ServiceCollection();

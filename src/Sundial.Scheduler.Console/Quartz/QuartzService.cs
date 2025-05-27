@@ -5,6 +5,7 @@ using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
 using Sundial.Scheduler.Models;
+using Topshelf.Options;
 
 namespace Sundial.Scheduler.Quartz;
 
@@ -39,7 +40,6 @@ public class QuartzService
     public async Task StartAsync()
     {
         _logger.LogInformation("服务正在启动...");
-        await RegisterJobs();
         await _scheduler.Start();
     }
 
@@ -58,7 +58,8 @@ public class QuartzService
     /// <returns></returns>
     private IScheduler GetScheduler()
     {
-        IScheduler scheduler = new StdSchedulerFactory().GetScheduler().Result;
+        QuartzOption option = new QuartzOption(_configuration);
+        IScheduler scheduler = new StdSchedulerFactory(option.ToProperties()).GetScheduler().Result;
         scheduler.JobFactory = _serviceProvider.GetRequiredService<IJobFactory>();
         return scheduler;
     }
