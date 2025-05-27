@@ -63,23 +63,4 @@ public class QuartzService
         scheduler.JobFactory = _serviceProvider.GetRequiredService<IJobFactory>();
         return scheduler;
     }
-
-    /// <summary>
-    /// 注册作业
-    /// </summary>
-    /// <returns></returns>
-    private async Task RegisterJobs()
-    {
-        var quartzConfig = _configuration.GetSection("Quartz").Get<QuartzConfig>();
-        ArgumentNullException.ThrowIfNull(quartzConfig, nameof(quartzConfig));
-        foreach (QuartzJobConfig job in quartzConfig.Jobs)
-        {
-            var jobType = Type.GetType(job.JobType);
-            ArgumentNullException.ThrowIfNull(jobType, nameof(jobType));
-            IJobDetail jobDetail = JobBuilder.Create(jobType).WithIdentity(job.Name, job.Group).Build();
-            ITrigger trigger = TriggerBuilder.Create().WithIdentity($"{job.Name}-Trigger", job.Group).WithCronSchedule(job.CronExpression).Build();
-            await _scheduler.ScheduleJob(jobDetail, trigger);
-            _logger.LogInformation($"Scheduled Job: {job.Name} With Cron: {job.CronExpression}");
-        }
-    }
 }
