@@ -26,7 +26,7 @@ public class TestJob : IJob
     /// <returns></returns>
     public Task Execute(IJobExecutionContext context)
     {
-        _logger.LogInformation($"任务[{nameof(TestJob)}]执行时间{DateTime.Now}");
+        _logger.LogInformation($"任务[{nameof(TestJob)}开始执行时间[{DateTime.Now}]");
         return Task.CompletedTask;
     }
 }
